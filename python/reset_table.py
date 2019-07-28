@@ -8,6 +8,7 @@ from gopro import get_last_photo
 
 from network import UiCommands
 
+
 CURRENTLY_RESETTING = False
 
 def save_checkpoint():
