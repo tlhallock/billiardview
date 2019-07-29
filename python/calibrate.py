@@ -17,4 +17,5 @@ def calibrate():
     calibration_photos.append(photo)
     play_audio(AudioKeys.CONFIRM_CALIBRATION_STEP)
   
+  
       

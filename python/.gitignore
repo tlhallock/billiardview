@@ -1,0 +1,3 @@
+saved_images/*.png
+__pycache__/
+audio/*.mp3

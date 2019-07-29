@@ -116,7 +116,17 @@ def save_calibration(original_file):
     [0, 1],
     [0, 0],
   ])
-
+  
+  NSPOTSX = 7
+  NSPOTSY = 3
+  expected_locations = np.array([
+    [x, y]
+    for idx1, x in enumerate(np.linspace(0, 1, NSPOTSX + 2))
+    if idx1 != 0 and idx1 != NSPOTSX + 1
+    for idx2, y in enumerate(np.linspace(0, 1, NSPOTSY + 2))
+    if idx2 != 0 and idx2 != NSPOTSY + 1
+  ])
+  
   expected_locations = np.array([
     [0/6, 0/2],
     [1/6, 0/2],
@@ -156,8 +166,9 @@ def save_calibration(original_file):
   a2 = (np.array([[W, 0],[0, H]])@a1.T).T
 
   h, status = cv2.findHomography(closest_locations, a2)
-
- CALIBRATION_RESET_REQUIRED = True
+  
+  global CALIBRATION_RESET_REQUIRED
+  CALIBRATION_RESET_REQUIRED = True
   with open('calibration_info.pickle', 'wb') as info_file:
     pickle.dump(
       {

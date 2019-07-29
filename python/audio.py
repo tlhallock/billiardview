@@ -20,7 +20,7 @@ class AudioKeys:
 
 def play_audio(audio_name):
   if QUIET:
-    print(audio_name)
+    print("RESPONSE: " + audio_name)
   else:
     path = AUDIO_DIRECTORY + audio_name + '.mp3'
     os.system('mpg321 ' + path)
