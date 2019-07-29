@@ -6,6 +6,7 @@ from gopro import get_raw_photo
 from audio import play_audio
 from audio import AudioKeys
 
+
 NUM_CALIBRATION_PHOTOS = 10
 
 def calibrate():
