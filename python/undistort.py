@@ -17,28 +17,29 @@ def read():
     )
 
 
-CALIBRATION_RESET_REQUIRED = True
+#h = None
+#map1 = None
+#map2 = None
+#W = None
+#H = None
 
-h = None
-map1 = None
-map2 = None
-W = None
-H = None
+REMOVE_FISH_EYE = False
 
 def undistort_image(image):
-  global CALIBRATION_RESET_REQUIRED
-  global h
-  global map1
-  global map2
-  global W
-  global H
-  if CALIBRATION_RESET_REQUIRED is None:
-    raise Exception("Not calibrated")
-  if h is None or CALIBRATION_RESET_REQUIRED:
-    h, map1, map2, W, H = read()
-  undistorted_img = cv2.remap(frame, map1, map2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
-  fixed_image = cv2.warpPerspective(undistorted_img, h, (W, H))
-  return fixed_image
+  #global CALIBRATION_RESET_REQUIRED
+  #global h
+  #global map1
+  #global map2
+  #global W
+  #global H
+  #if CALIBRATION_RESET_REQUIRED is None:
+  #  raise Exception("Not calibrated")
+  #if h is None or CALIBRATION_RESET_REQUIRED:
+  h, map1, map2, W, H = read()
+  if REMOVE_FISH_EYE:
+    image = cv2.remap(image, map1, map2, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT)
+  image = cv2.warpPerspective(image, h, (W, H))
+  return image
 
 
 

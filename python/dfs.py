@@ -16,6 +16,8 @@ from network import send_command
 from network import ShotResult
 from network import UiCommands
 
+from calibrate import calibrate
+
 
 # Rename to audio commands...
 class Commands:
@@ -49,15 +51,17 @@ class States:
   TAKING_COMMAND = 1
   RESETING = 2
   PRACTICING = 3
+  CALIBRATING = 4
   
   # SELECTING_SHOT
-  # CALIBRATING
+  # 
 
 
 class Dfs:
-  def __init__(self):
+  def __init__(self, gopro):
     self.state = States.LISTENING
     self.num_practice_balls = -1
+    self.gopro = gopro
   
   def receive(self, text, get_next_text):
     if self.state == States.LISTENING:
@@ -71,31 +75,32 @@ class Dfs:
       if Commands.RESET_BEGIN in text:
         play_audio(AudioKeys.CONFIRM_RESET_BEGIN)
         self.state = States.RESETING
-        threading.Thread(target=begin_reset).start()
+        threading.Thread(target=begin_reset, args=(self.gopro,)).start()
       elif Commands.TAKE_CHECKPOINT in text:
         play_audio(AudioKeys.CONFIRM_CHECKPOINT)
         self.state = States.LISTENING
-        save_checkpoint()
+        save_checkpoint(self.gopro)
       elif Commands.NEVERMIND in text:
         play_audio(AudioKeys.OK)
         self.state = States.LISTENING
       elif Commands.SHOW_SHOT in text:
         play_audio(AudioKeys.OK)
         self.state = States.LISTENING
-        send_command(b'0x00')
+        send_command(UiCommands.SHOW_SHOT_AIM)
       elif Commands.SHOW_BOARD in text:
         play_audio(AudioKeys.OK)
         self.state = States.LISTENING
-        send_command(b'0x00')
+        send_command(UiCommands.SHOW_POOL_TABLE)
       elif Commands.SHOW_RESETTER in text:
         play_audio(AudioKeys.OK)
         self.state = States.LISTENING
-        send_command(b'0x00')
+        send_command(UiCommands.SHOW_RESET_FRAME)
       elif Commands.CALIBRATE in text:
         self.state = States.CALIBRATING
         play_audio(AudioKeys.CONFIRM_CALIBRATING_BEGIN)
-        calibrate()
+        calibrate(self.gopro)
         play_audio(AudioKeys.CONFIRM_CALIBRATION_END)
+        self.state = States.LISTENING
       elif Commands.PRACTICE in text:
         play_audio(AudioKeys.CONFIRM_PRACTICE)
         
@@ -120,7 +125,6 @@ class Dfs:
         
         
         self.state = States.PRACTICE
-
       elif Commands.QUIT in text:
         play_audio(AudioKeys.CONFIRM_QUIT)
         self.state = States.LISTENING

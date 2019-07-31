@@ -1,3 +1,6 @@
 saved_images/*.png
 __pycache__/
 audio/*.mp3
+calibration_info.pickle
+debug/
+

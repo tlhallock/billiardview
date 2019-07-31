@@ -1,15 +1,9 @@
 import speech_recognition as sr
 
+from gopro import create_gopro
+
 from dfs import Dfs
 import time
-
-MOCK_COMMANDS = [
-  ('apothecary', 1),
-  ('ubiquitous', 1),
-  ('apothecary', 1),
-  ('lackadaisical', 5),
-  ('done', 4),
-]
 
 
 class MockMicrophone:
@@ -42,14 +36,16 @@ def get_next_text(r, source):
         print("Try again")
   return l
 
-def listen_for_commands():
+
+def listen_for_commands(mock_commands=None, mock_image_paths = None):
+  gopro = create_gopro(mock_image_paths)
   r = sr.Recognizer()
   m = sr.Microphone(device_index=8)
   
-  dfs = Dfs()
+  dfs = Dfs(gopro)
   
-  if MOCK_COMMANDS is not None:
-    mic = MockMicrophone(MOCK_COMMANDS)
+  if mock_commands is not None:
+    mic = MockMicrophone(mock_commands)
     while mic.has_next():
       mock_command = mic.next_cmd()
       print(mock_command)
@@ -81,55 +77,3 @@ def listen_for_commands():
   except KeyboardInterrupt:
     pass
 
-
-'''
-
-java:
-	collect features options
-	classify options
-	show position
-	
-	
-	
-	
-	gopro:
-		record
-		calibrate
-
-
-
-
-
-
-implement paint where to leave it
-
-
-
-implement pocket wall
-implement clock
-implement balls from spot
-
-fix bug of not detecting some shots
-fix bug of ghost shot off the board
-
-
-detect balls
-
-
-
-select shot
-message shot result
-turn try again on
-turn try again off
-
-
-
-calibrate table
-
-
-
-implement pandora
-
-
-
-'''
